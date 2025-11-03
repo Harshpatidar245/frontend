@@ -1,0 +1,66 @@
+/* Services.css */
+
+.services {
+  display: flex;
+  justify-content: center; /* centers all cards in a row */
+  align-items: center;
+  gap: 60px; /* equal spacing between cards */
+  flex-wrap: wrap; /* allows wrapping on smaller screens */
+  padding: 60px 40px;
+  background-color: #fff;
+  text-align: center;
+}
+
+/* each service block */
+.service-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 180px;
+  transition: transform 0.3s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-5px);
+}
+
+/* icons */
+.service-icon {
+  color: #b56cff;
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
+
+.service-icon svg {
+  width: 70px;   
+  height: 70px;
+}
+
+/* title */
+.service-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 6px;
+}
+
+/* description */
+.service-card p {
+  font-size: 0.85rem;
+  color: #666;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* smaller screens */
+@media (max-width: 768px) {
+  .services {
+    flex-wrap: wrap;
+    gap: 30px;
+  }
+
+  .service-card {
+    width: 150px;
+  }
+}

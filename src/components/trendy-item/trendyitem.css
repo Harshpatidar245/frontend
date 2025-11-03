@@ -1,0 +1,159 @@
+.trendy {
+  text-align: center;
+  padding: 60px 40px;
+  background: #fff;
+}
+
+.section-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 40px;
+}
+
+.trendy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 40px;
+  justify-items: center;
+}
+
+.trendy-card {
+  width: 220px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.trendy-card:hover {
+  transform: translateY(-5px);
+}
+
+.card-img {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #f9f9f9;
+}
+
+.card-img img {
+  width: 100%;
+  height: auto;
+  transition: all 0.3s ease;
+}
+
+.trendy-card:hover img {
+  opacity: 0.3;
+}
+
+.hover-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s ease;
+  background: rgba(255, 255, 255, 0.8);
+  padding-bottom: 10px;
+}
+
+.trendy-card:hover .hover-overlay {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Small preview thumbnails */
+.hover-thumbs {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.hover-thumbs img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Add to Cart button */
+.add-btn {
+  background: #b56cff;
+  color: #fff;
+  border: none;
+  padding: 8px 0;
+  width: 100%;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.add-btn:hover {
+  background: #9c4fe0;
+}
+
+/* Icons */
+.hover-icons {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hover-icons svg {
+  background: white;
+  border-radius: 50%;
+  padding: 6px;
+  font-size: 1.4rem;
+  color: #555;
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+}
+
+.hover-icons svg:hover {
+  color: #b56cff;
+}
+
+/* Text under image */
+.tag {
+  font-style: italic;
+  font-size: 0.8rem;
+  color: #777;
+  margin-top: 10px;
+}
+
+.trendy-card h3 {
+  font-size: 1rem;
+  color: #222;
+  font-weight: 600;
+  margin: 6px 0;
+}
+
+.price {
+  font-size: 1rem;
+  color: #24a36d;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .trendy {
+    padding: 40px 20px;
+  }
+  .trendy-card {
+    width: 100%;
+    max-width: 240px;
+  }
+  .hover-thumbs img {
+    width: 32px;
+    height: 32px;
+  }
+  .add-btn {
+    font-size: 0.8rem;
+  }
+}

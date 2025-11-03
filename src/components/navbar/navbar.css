@@ -1,0 +1,177 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  background-color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 80px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #222;
+}
+
+.navbar-left svg {
+  color: #b56cff;
+  font-size: 2rem;
+  margin-right: 8px;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+
+.navbar-right a {
+  color: #000;
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+
+.navbar-right a:hover {
+  color: #b56cff;
+}
+
+.cart-icon {
+  position: relative;
+}
+
+.cart-icon svg {
+  font-size: 1.7rem;
+  color: #000;
+}
+
+.cart-count {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: #000;
+  color: #fff;
+  font-size: 0.7rem;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.menu-toggle {
+  display: none;
+  cursor: pointer;
+}
+
+.menu-toggle svg {
+  font-size: 2rem;
+  color: #000;
+}
+
+/* Tablet View */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 12px 30px;
+  }
+
+  .navbar-right {
+    gap: 18px;
+    font-size: 0.9rem;
+  }
+
+  .navbar-left {
+    font-size: 1.2rem;
+  }
+}
+
+/* Mobile View (<=500px) */
+@media (max-width: 500px) {
+  .navbar {
+    padding: 12px 20px;
+  }
+
+  .menu-toggle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .navbar-right {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background-color: #fff;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    padding: 20px;
+    gap: 20px;
+    border-top: 1px solid #eee;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    transform: translateY(-200%);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+  }
+
+  .navbar-right.active {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .navbar-right a {
+    width: 100%;
+    font-size: 1rem;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f2f2f2;
+  }
+
+  .navbar-left {
+    font-size: 1rem;
+  }
+
+  /* Make cart icon visible beside hamburger in mobile */
+  .menu-toggle .cart-icon {
+    display: flex;
+    position: relative;
+  }
+
+  /* Hide cart from the main menu when menu toggle is visible */
+  .navbar-right .cart-icon {
+    display: none;
+  }
+}
+
+/* Restore desktop layout if resized back up */
+@media (min-width: 501px) {
+  .navbar-right {
+    position: static;
+    flex-direction: row;
+    align-items: center;
+    opacity: 1;
+    pointer-events: all;
+    transform: none;
+    background: none;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  .navbar-right .cart-icon {
+    display: flex;
+  }
+
+  .menu-toggle .cart-icon {
+    display: none;
+  }
+}

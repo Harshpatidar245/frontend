@@ -1,0 +1,205 @@
+/* TOP BAR (thin light background, title + breadcrumb) */
+.account-topbar {
+  background: #f6f6f6;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+  box-shadow: none;
+}
+
+.account-top-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #222;
+}
+
+.account-breadcrumb {
+  font-size: 13px;
+  color: #777;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.account-breadcrumb a {
+  color: #777;
+  text-decoration: none;
+}
+
+/* MAIN PAGE LAYOUT */
+.account-page {
+  font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: #222;
+  background: #fff;
+}
+
+/* center container */
+.account-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 20px 80px;
+}
+
+/* login box */
+.login-box {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  padding: 28px 30px;
+  width: 100%;
+  max-width: 540px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+}
+
+/* mode switch (login / signup) */
+.mode-switch {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+.mode-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #666;
+  border-radius: 4px;
+}
+.mode-btn.active {
+  background: #8b5cf6;
+  color: #fff;
+  border-color: #8b5cf6;
+}
+
+/* headings */
+.login-header {
+  text-align: center;
+  font-size: 24px;
+  margin: 6px 0 18px;
+  font-weight: 700;
+  color: #222;
+}
+
+/* form */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+}
+.form-group.half {
+  flex: 1;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+.form-group span {
+  color: #c00;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.form-group input::placeholder {
+  color: #bdbdbd;
+}
+
+.form-group input:focus {
+  border-color: #8b5cf6;
+}
+
+/* password toggle button */
+.password-wrapper {
+  position: relative;
+}
+.toggle-password {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 6px;
+}
+
+/* remember and submit */
+.remember-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #444;
+}
+
+.login-btn {
+  width: 100%;
+  margin-top: 6px;
+  background: #a475f2;
+  color: white;
+  font-weight: 700;
+  text-transform: uppercase;
+  border: none;
+  padding: 12px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background 0.25s;
+}
+.login-btn:hover {
+  background: #8c5adf;
+}
+
+.forgot-link {
+  text-align: center;
+  margin-top: 12px;
+  font-size: 0.9rem;
+  color: #444;
+}
+
+/* small tweaks */
+.breadcrumb-sep {
+  color: #999;
+  margin: 0 4px;
+}
+
+/* responsiveness */
+@media (max-width: 768px) {
+  .account-topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .account-container {
+    padding: 28px 14px 60px;
+  }
+  .login-box {
+    padding: 18px;
+  }
+  .form-row {
+    flex-direction: column;
+  }
+}
