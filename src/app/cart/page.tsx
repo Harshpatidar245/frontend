@@ -4,7 +4,12 @@ import "./cart.css";
 import Image from "next/image";
 
 export default function CartPage() {
-  const { cart, removeFromCart, updateQuantity, total } = useCart();
+  const { cart = [], removeFromCart, updateQuantity, total = 0 } = useCart();
+
+  const formatPrice = (value: unknown): string => {
+    const num = Number(value);
+    return isNaN(num) ? "0.00" : num.toFixed(2);
+  };
 
   return (
     <div className="cart-page">
@@ -25,55 +30,51 @@ export default function CartPage() {
               </tr>
             </thead>
             <tbody>
-              {cart.map((item) => (
-                <tr key={item.id}>
-                  <td>
-                    <button
-                      className="remove-btn"
-                      onClick={() => removeFromCart(item.id)}
-                    >
-                      ✕
-                    </button>
-                  </td>
-                  <td className="product-cell">
-                    <Image
-                      src={item.image}
-                      alt={item.name}
-                      width={50}
-                      height={50}
-                    />
-                    <span>{item.name}</span>
-                  </td>
-                  <td>${item.price.toFixed(2)}</td>
-                  <td>
-                    <div className="qty-box">
+              {cart.map((item) => {
+                const product = item.productId;
+                const productId = product?._id;
+                const price = Number(product?.price) || 0;
+                const name = product?.name || "Unnamed";
+                const image = product?.image || "/placeholder.png";
+                const qty = item.quantity || 1;
+
+                return (
+                  <tr key={productId}>
+                    <td>
                       <button
-                        onClick={() =>
-                          updateQuantity(item.id, item.quantity - 1)
-                        }
+                        className="remove-btn"
+                        onClick={() => removeFromCart(String(productId))}
                       >
-                        -
+                        ✕
                       </button>
-                      <span>{item.quantity}</span>
-                      <button
-                        onClick={() =>
-                          updateQuantity(item.id, item.quantity + 1)
-                        }
-                      >
-                        +
-                      </button>
-                    </div>
-                  </td>
-                  <td>${(item.price * item.quantity).toFixed(2)}</td>
-                </tr>
-              ))}
+                    </td>
+                    <td className="product-cell">
+                      <Image src={image} alt={name} width={50} height={50} />
+                      <span>{name}</span>
+                    </td>
+                    <td>${formatPrice(price)}</td>
+                    <td>
+                      <div className="qty-box">
+                        <button onClick={() => updateQuantity(String(productId), qty - 1)}>
+                          -
+                        </button>
+                        <span>{qty}</span>
+                        <button onClick={() => updateQuantity(String(productId), qty + 1)}>
+                          +
+                        </button>
+                      </div>
+                    </td>
+                    <td>${formatPrice(price * qty)}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
 
           <div className="cart-summary">
             <h3>Cart Totals</h3>
-            <p>Subtotal: ${total.toFixed(2)}</p>
-            <p>Total: ${total.toFixed(2)}</p>
+            <p>Subtotal: ${formatPrice(total)}</p>
+            <p>Total: ${formatPrice(total)}</p>
             <button className="checkout-btn">PROCEED TO CHECKOUT</button>
           </div>
         </div>

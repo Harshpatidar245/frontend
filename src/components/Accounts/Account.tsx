@@ -1,16 +1,31 @@
-// src/components/Account.tsx
 "use client";
 import "./Account.css";
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
 
 export default function Account() {
   const [showPassword, setShowPassword] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
+  const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const { login, register, isAuthenticated } = useAuth();
+  const [message, setMessage] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setMessage("");
+    if (isLogin) {
+      const res = await login(form.email, form.password);
+      if (!res.ok) setMessage(res.message || "Login failed");
+    } else {
+      const res = await register(form);
+      if (!res.ok) setMessage(res.message || "Signup failed");
+    }
+  };
 
   return (
     <div className="account-page">
-      {/* topbar with breadcrumb and title */}
       <div className="account-topbar">
         <h1 className="account-top-title">My Account</h1>
         <div className="account-breadcrumb">
@@ -20,50 +35,80 @@ export default function Account() {
         </div>
       </div>
 
-      {/* main centered login area */}
       <div className="account-container">
         <div className="login-box">
-          <h2 className="login-header">Login</h2>
+          <h2 className="login-header">{isLogin ? "Login" : "Register"}</h2>
+          {isAuthenticated ? (
+            <p>You are already logged in.</p>
+          ) : (
+            <form className="login-form" onSubmit={handleSubmit}>
+              {!isLogin && (
+                <div className="form-group">
+                  <label>
+                    Name <span>*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={form.name}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  />
+                </div>
+              )}
 
-          <form className="login-form" onSubmit={(e) => e.preventDefault()}>
-            <div className="form-group">
-              <label>
-                Username or email address <span>*</span>
-              </label>
-              <input type="text" required />
-            </div>
-
-            <div className="form-group">
-              <label>
-                Password <span>*</span>
-              </label>
-              <div className="password-wrapper">
+              <div className="form-group">
+                <label>
+                  Email address <span>*</span>
+                </label>
                 <input
-                  type={showPassword ? "text" : "password"}
+                  type="email"
                   required
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
                 />
-                <button
-                  type="button"
-                  className="toggle-password"
-                  onClick={() => setShowPassword(!showPassword)}
-                  aria-label="Toggle password visibility"
-                >
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
-                </button>
               </div>
-            </div>
 
-            <div className="remember-row">
-              <input type="checkbox" id="remember" />
-              <label htmlFor="remember">Remember me</label>
-            </div>
+              <div className="form-group">
+                <label>
+                  Password <span>*</span>
+                </label>
+                <div className="password-wrapper">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    required
+                    value={form.password}
+                    onChange={(e) =>
+                      setForm({ ...form, password: e.target.value })
+                    }
+                  />
+                  <button
+                    type="button"
+                    className="toggle-password"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label="Toggle password visibility"
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
+                </div>
+              </div>
 
-            <button type="submit" className="login-btn">
-              Log In
-            </button>
+              <button type="submit" className="login-btn">
+                {isLogin ? "Log In" : "Register"}
+              </button>
 
-            <p className="forgot-link">Lost your password?</p>
-          </form>
+              {message && <p className="error-msg">{message}</p>}
+
+              <p
+                className="switch-link"
+                onClick={() => setIsLogin(!isLogin)}
+                style={{ cursor: "pointer" }}
+              >
+                {isLogin
+                  ? "Don't have an account? Register"
+                  : "Already have an account? Login"}
+              </p>
+            </form>
+          )}
         </div>
       </div>
     </div>

@@ -17,7 +17,7 @@ type AuthContextType = {
   isAdmin: boolean;
   loading: boolean;
   login: (email: string, password: string) => Promise<{ ok: boolean; message?: string }>;
-  register: (payload: { name?: string; email: string; password: string; role?: string }) => Promise<{ ok: boolean; message?: string }>;
+  register: (payload: { name: string; email: string; password: string }) => Promise<{ ok: boolean; message?: string }>;
   logout: () => void;
 };
 
@@ -57,7 +57,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const register = async (payload: { name?: string; email: string; password: string; role?: string }) => {
+  const register = async (payload: { name: string; email: string; password: string }) => {
     try {
       const res = await api.post("/auth/register", payload);
       const { token: t, user: u } = res.data;

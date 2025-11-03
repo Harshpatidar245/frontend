@@ -1,72 +1,44 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./trendyitem.css";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
-
-const products = [
-  {
-    id: 1,
-    name: "Suspendisse id luctus metus",
-    tag: "essential",
-    price: 6.0,
-    image:
-      "https://essential.oceanwp.org/wp-content/uploads/2016/08/4-300x300.png",
-    thumbs: [
-      "https://essential.oceanwp.org/wp-content/uploads/2016/08/4-300x300.png",
-      "https://essential.oceanwp.org/wp-content/uploads/2016/08/5-300x300.png",
-      "https://essential.oceanwp.org/wp-content/uploads/2016/08/6-300x300.png",
-    ],
-  },
-  {
-    id: 2,
-    name: "Mauris malesuada odio",
-    tag: "essential",
-    price: 6.0,
-    image:
-      "https://essential.oceanwp.org/wp-content/uploads/2016/08/5-300x300.png",
-    thumbs: [
-      "https://essential.oceanwp.org/wp-content/uploads/2016/08/5-300x300.png",
-      "https://essential.oceanwp.org/wp-content/uploads/2016/08/4-300x300.png",
-      "https://essential.oceanwp.org/wp-content/uploads/2016/08/6-300x300.png",
-    ],
-  },
-  {
-    id: 3,
-    name: "Fusce egestas odio",
-    tag: "essential",
-    price: 6.0,
-    image:
-      "https://essential.oceanwp.org/wp-content/uploads/2016/08/6-300x300.png",
-    thumbs: [
-      "https://essential.oceanwp.org/wp-content/uploads/2016/08/6-300x300.png",
-      "https://essential.oceanwp.org/wp-content/uploads/2016/08/4-300x300.png",
-      "https://essential.oceanwp.org/wp-content/uploads/2016/08/5-300x300.png",
-    ],
-  },
-  {
-    id: 4,
-    name: "Vitae augue scelerisque",
-    tag: "essential",
-    price: 6.0,
-    image:
-      "https://essential.oceanwp.org/wp-content/uploads/2016/08/3-300x300.png",
-    thumbs: [
-      "https://essential.oceanwp.org/wp-content/uploads/2016/08/3-300x300.png",
-      "https://essential.oceanwp.org/wp-content/uploads/2016/08/5-300x300.png",
-      "https://essential.oceanwp.org/wp-content/uploads/2016/08/4-300x300.png",
-    ],
-  },
-];
+import { useAuth } from "@/context/AuthContext";
+import { api } from "@/lib/api";
 
 const TrendyItem = () => {
   const router = useRouter();
   const { addToCart } = useCart();
+  const { user, token } = useAuth();
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleProductClick = (id: number) => {
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        const res = await api.get("/products");
+        setProducts(res.data);
+      } catch (err) {
+        console.error("Failed to load products:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadProducts();
+  }, []);
+
+  const handleProductClick = (id: string | number) =>
     router.push(`/product/${id}`);
+
+  const handleAddToCart = async (product: any, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!user || !token) {
+      router.push("/login");
+      return;
+    }
+    await addToCart(product);
   };
 
   return (
@@ -74,41 +46,35 @@ const TrendyItem = () => {
       <h2 className="section-title">Trendy Items</h2>
 
       <div className="trendy-grid">
-        {products.map((product) => (
-          <div className="trendy-card" key={product.id}>
-            <div
-              className="card-img"
-              onClick={() => handleProductClick(product.id)}
-            >
-              <img src={product.image} alt={product.name} />
-              <div className="hover-overlay">
-                <div className="hover-thumbs">
-                  {product.thumbs.map((thumb, i) => (
-                    <img key={i} src={thumb} alt={`thumb-${i}`} />
-                  ))}
-                </div>
-
-                <button
-                  className="add-btn"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    addToCart(product);
-                  }}
-                >
-                  ADD TO CART
-                </button>
-
-                <div className="hover-icons">
-                  <VisibilityIcon />
-                  <FavoriteBorderIcon />
+        {loading ? (
+          <p>Loading products...</p>
+        ) : (
+          products.map((product) => (
+            <div className="trendy-card" key={product._id || product.id}>
+              <div
+                className="card-img"
+                onClick={() => handleProductClick(product._id || product.id)}
+              >
+                <img src={product.image} alt={product.name} />
+                <div className="hover-overlay">
+                  <button
+                    className="add-btn"
+                    onClick={(e) => handleAddToCart(product, e)}
+                  >
+                    ADD TO CART
+                  </button>
+                  <div className="hover-icons">
+                    <VisibilityIcon />
+                    <FavoriteBorderIcon />
+                  </div>
                 </div>
               </div>
+              <p className="tag">{product.tag || "essential"}</p>
+              <h3>{product.name}</h3>
+              <p className="price">${product.price?.toFixed(2) || "0.00"}</p>
             </div>
-            <p className="tag">{product.tag}</p>
-            <h3>{product.name}</h3>
-            <p className="price">${product.price.toFixed(2)}</p>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </section>
   );

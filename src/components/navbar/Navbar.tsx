@@ -8,9 +8,11 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 
 const Navbar = () => {
   const { cart } = useCart();
+  const { isAuthenticated, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -27,6 +29,11 @@ const Navbar = () => {
         <Link href="/blog">BLOG</Link>
         <Link href="/contact">CONTACT</Link>
         <Link href="/myaccount">MY ACCOUNT</Link>
+        {isAuthenticated ? (
+          <button className="logout-btn" onClick={logout}>
+            LOGOUT
+          </button>
+        ) : null}
         <Link href="/cart" className="cart-icon" aria-label="View Cart">
           <ShoppingCartIcon />
           {totalItems > 0 && <span className="cart-count">{totalItems}</span>}
