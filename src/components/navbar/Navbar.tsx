@@ -32,7 +32,7 @@ const Navbar = () => {
     <div className="navbar">
       <div
         className="navbar-left"
-        onClick={() => router.push("/admin")}
+        onClick={() => router.push(isAdmin ? "/admin" : "/")}
         style={{ cursor: "pointer" }}
       >
         <WaterDropIcon className="logo-icon" />
@@ -40,7 +40,7 @@ const Navbar = () => {
       </div>
 
       <div className={`navbar-right ${menuOpen ? "active" : ""}`}>
-        {/* Normal user links */}
+        {/* Non-admin user navigation */}
         {!isAdmin && (
           <>
             <Link href="/" onClick={handleNavClick}>
@@ -56,7 +56,7 @@ const Navbar = () => {
               CONTACT
             </Link>
 
-            {/* Show MY ACCOUNT only when user is NOT logged in */}
+            {/* Show MY ACCOUNT only when NOT logged in */}
             {!isAuthenticated && (
               <Link href="/myaccount" onClick={handleNavClick}>
                 MY ACCOUNT
@@ -85,7 +85,7 @@ const Navbar = () => {
           </>
         )}
 
-        {/* Admin-only links */}
+        {/* Admin-only navigation */}
         {isAuthenticated && isAdmin && (
           <>
             <Link href="/admin/addproduct" onClick={handleNavClick}>

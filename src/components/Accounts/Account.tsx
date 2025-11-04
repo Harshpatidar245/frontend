@@ -10,32 +10,53 @@ export default function Account() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const [form, setForm] = useState({ name: "", email: "", password: "" });
-  const { login, register, isAuthenticated, user } = useAuth(); // make sure `user` is returned from your AuthContext
+  const { login, register, isAuthenticated, user } = useAuth();
   const [message, setMessage] = useState("");
   const router = useRouter();
 
   // redirect after login based on role
   useEffect(() => {
     if (isAuthenticated && user) {
-      if (user.role === "admin") {
-        router.push("/admin/adminHome");
-      } else {
-        router.push("/");
-      }
+      if (user.role === "admin") router.push("/admin/adminHome");
+      else router.push("/");
     }
   }, [isAuthenticated, user, router]);
+
+  // simple email regex
+  const validateEmail = (email: string) => /\S+@\S+\.\S+/.test(email);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage("");
 
-    if (isLogin) {
-      const res = await login(form.email, form.password);
-      if (!res.ok) return setMessage(res.message || "Login failed");
-      // redirection handled automatically by useEffect
-    } else {
-      const res = await register(form);
-      if (!res.ok) return setMessage(res.message || "Signup failed");
+    // Frontend validation
+    if (!form.email || !form.password || (!isLogin && !form.name)) {
+      return setMessage("Please fill in all required fields.");
+    }
+
+    if (!validateEmail(form.email)) {
+      return setMessage("Enter a valid email address.");
+    }
+
+    if (form.password.length < 6) {
+      return setMessage("Password must be at least 6 characters long.");
+    }
+
+    if (!isLogin && form.name.trim().length < 2) {
+      return setMessage("Name must be at least 2 characters.");
+    }
+
+    // Backend call
+    try {
+      if (isLogin) {
+        const res = await login(form.email, form.password);
+        if (!res.ok) return setMessage(res.message || "Login failed");
+      } else {
+        const res = await register(form);
+        if (!res.ok) return setMessage(res.message || "Signup failed");
+      }
+    } catch {
+      setMessage("Something went wrong. Please try again later.");
     }
   };
 
@@ -66,7 +87,9 @@ export default function Account() {
                     type="text"
                     required
                     value={form.name}
-                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, name: e.target.value })
+                    }
                   />
                 </div>
               )}
@@ -79,7 +102,9 @@ export default function Account() {
                   type="email"
                   required
                   value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  onChange={(e) =>
+                    setForm({ ...form, email: e.target.value })
+                  }
                 />
               </div>
 
@@ -115,7 +140,10 @@ export default function Account() {
 
               <p
                 className="switch-link"
-                onClick={() => setIsLogin(!isLogin)}
+                onClick={() => {
+                  setIsLogin(!isLogin);
+                  setMessage("");
+                }}
                 style={{ cursor: "pointer" }}
               >
                 {isLogin
