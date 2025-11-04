@@ -55,11 +55,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       localStorage.setItem("token", t);
       localStorage.setItem("user", JSON.stringify(u));
 
-      // Explicitly check for admin login
-      if (u?.role === "admin") {
-        console.log("Admin logged in:", u.email);
-      }
-
       return { ok: true };
     } catch (err: any) {
       return { ok: false, message: err?.response?.data?.message || "Login failed" };

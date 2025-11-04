@@ -1,4 +1,5 @@
 "use client";
+
 import {
   createContext,
   useContext,
@@ -38,28 +39,27 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const { token, user } = useAuth();
   const router = useRouter();
 
-  // Load user cart only if logged in
+  // Load cart only if user is logged in AND not admin
   useEffect(() => {
     const fetchCart = async () => {
-      if (!token) return; // skip if not logged in
+      if (!token || user?.role === "admin") return; // skip admin
       try {
         const res = await api.get("/cart");
         if (res.data?.items) setCart(res.data.items);
       } catch (err: any) {
-        // Silently ignore 401s, log others
         if (err.response?.status !== 401)
           console.error("Failed to load cart:", err);
       }
     };
     fetchCart();
-  }, [token]);
+  }, [token, user]);
 
-  // Add to cart
   const addToCart = async (product: Product) => {
     if (!user || !token) {
-      router.push("/login");
+      router.push("/myaccount");
       return;
     }
+    if (user.role === "admin") return;
 
     const productId = product._id;
     if (!productId) return;
@@ -69,51 +69,34 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       if (res.data?.items) setCart(res.data.items);
     } catch (err: any) {
       if (err.response?.status === 401) {
-        router.push("/login");
+        router.push("/myaccount");
       } else {
         console.error("Failed to add item:", err);
       }
     }
   };
 
-  // Remove from cart
   const removeFromCart = async (id: string) => {
-    if (!token) {
-      router.push("/login");
-      return;
-    }
+    if (!token || user?.role === "admin") return;
     try {
       const res = await api.delete(`/cart/remove/${id}`);
       if (res.data?.items) setCart(res.data.items);
     } catch (err: any) {
-      if (err.response?.status === 401) {
-        router.push("/login");
-      } else {
-        console.error("Failed to remove item:", err);
-      }
+      console.error("Failed to remove item:", err);
     }
   };
 
-  // Update quantity
   const updateQuantity = async (id: string, qty: number) => {
-    if (!token) {
-      router.push("/login");
-      return;
-    }
+    if (!token || user?.role === "admin") return;
     if (qty < 1) return;
     try {
       const res = await api.put(`/cart/update/${id}`, { quantity: qty });
       if (res.data?.items) setCart(res.data.items);
     } catch (err: any) {
-      if (err.response?.status === 401) {
-        router.push("/login");
-      } else {
-        console.error("Failed to update quantity:", err);
-      }
+      console.error("Failed to update quantity:", err);
     }
   };
 
-  // Calculate total
   const total = cart.reduce((sum, item) => {
     const price = item.productId?.price ?? 0;
     return sum + price * item.quantity;

@@ -17,17 +17,24 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter();
 
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const totalItems =
+    cart?.reduce((sum, item) => sum + (item?.quantity || 0), 0) || 0;
 
   const handleLogout = () => {
     logout();
     setMenuOpen(false);
-    router.push("/"); // Redirect to homepage after logout
+    router.push("/");
   };
+
+  const handleNavClick = () => setMenuOpen(false);
 
   return (
     <div className="navbar">
-      <div className="navbar-left">
+      <div
+        className="navbar-left"
+        onClick={() => router.push("/admin")}
+        style={{ cursor: "pointer" }}
+      >
         <WaterDropIcon className="logo-icon" />
         <span className="logo-text">ESSENTIAL</span>
       </div>
@@ -36,22 +43,22 @@ const Navbar = () => {
         {/* Normal user links */}
         {!isAdmin && (
           <>
-            <Link href="/" onClick={() => setMenuOpen(false)}>
+            <Link href="/" onClick={handleNavClick}>
               HOMEPAGE
             </Link>
-            <Link href="/shop" onClick={() => setMenuOpen(false)}>
+            <Link href="/shop" onClick={handleNavClick}>
               SHOP
             </Link>
-            <Link href="/blog" onClick={() => setMenuOpen(false)}>
+            <Link href="/blog" onClick={handleNavClick}>
               BLOG
             </Link>
-            <Link href="/contact" onClick={() => setMenuOpen(false)}>
+            <Link href="/contact" onClick={handleNavClick}>
               CONTACT
             </Link>
 
-            {/* Show MY ACCOUNT only when NOT logged in */}
+            {/* Show MY ACCOUNT only when user is NOT logged in */}
             {!isAuthenticated && (
-              <Link href="/myaccount" onClick={() => setMenuOpen(false)}>
+              <Link href="/myaccount" onClick={handleNavClick}>
                 MY ACCOUNT
               </Link>
             )}
@@ -59,13 +66,10 @@ const Navbar = () => {
             {/* Logged-in user options */}
             {isAuthenticated && (
               <>
-                <button className="logout-btn" onClick={handleLogout}>
-                  LOGOUT
-                </button>
                 <Link
                   href="/cart"
                   className="cart-icon"
-                  onClick={() => setMenuOpen(false)}
+                  onClick={handleNavClick}
                   aria-label="View Cart"
                 >
                   <ShoppingCartIcon />
@@ -73,6 +77,9 @@ const Navbar = () => {
                     <span className="cart-count">{totalItems}</span>
                   )}
                 </Link>
+                <button className="logout-btn" onClick={handleLogout}>
+                  LOGOUT
+                </button>
               </>
             )}
           </>
@@ -81,18 +88,10 @@ const Navbar = () => {
         {/* Admin-only links */}
         {isAuthenticated && isAdmin && (
           <>
-            <Link
-              href="/admin/addproduct"
-              className="add-btn"
-              onClick={() => setMenuOpen(false)}
-            >
+            <Link href="/admin/addproduct" onClick={handleNavClick}>
               ADD PRODUCT
             </Link>
-            <Link
-              href="/admin/addblog"
-              className="add-btn"
-              onClick={() => setMenuOpen(false)}
-            >
+            <Link href="/admin/addblog" onClick={handleNavClick}>
               ADD BLOG
             </Link>
             <button className="logout-btn" onClick={handleLogout}>
@@ -102,6 +101,7 @@ const Navbar = () => {
         )}
       </div>
 
+      {/* Mobile menu toggle */}
       <div className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)}>
         {menuOpen ? <CloseIcon /> : <MenuIcon />}
       </div>
