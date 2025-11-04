@@ -1,27 +1,29 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import "./Shop.css";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { api } from "@/lib/api";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
+import Image from "next/image";
+import "./Shop.css";
+
+type Product = {
+  _id: string;
+  name: string;
+  price: number;
+  image: string;
+};
 
 export default function ShopPage() {
-  const router = useRouter();
-  const { addToCart } = useCart();
-  const { user, token } = useAuth();
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const { addToCart } = useCart();
+  const { user } = useAuth();
 
-  // Fetch products using authorized API client
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const res = await api.get("/products");
-        setProducts(res.data);
+        setProducts(res.data || []);
       } catch (err) {
         console.error("Failed to load products:", err);
       } finally {
@@ -31,71 +33,40 @@ export default function ShopPage() {
     fetchProducts();
   }, []);
 
-  const handleProductClick = (id: string) => router.push(`/product/${id}`);
-
-  const handleAddToCart = async (product: any) => {
-    try {
-      if (!user || !token) {
-        router.push("/login");
-        return;
-      }
-      await addToCart(product); // context handles API call + state update
-    } catch (err) {
-      console.error("Failed to add to cart:", err);
-    }
-  };
-
-  if (loading) return <p>Loading products...</p>;
+  if (loading) return <p className="loading">Loading products...</p>;
 
   return (
     <div className="shop-page">
-      <div className="shop-topbar">
-        <h1 className="shop-title">Shop</h1>
-        <div className="shop-breadcrumb">
-          <Link href="/">🏠 Home</Link>
-          <span>›</span>
-          <span>Shop</span>
-        </div>
-      </div>
-
-      <div className="controls-row">
-        <div className="controls-left">
-          <button className="view-btn active" title="Grid view">▦</button>
-          <button className="view-btn" title="List view">≡</button>
-        </div>
-      </div>
-
-      <div className="product-grid">
-        {products.map((product) => (
-          <div
-            key={product._id || product.id}
-            className="product-card"
-            onClick={() => handleProductClick(product._id || product.id)}
-          >
-            <div className="card-img">
-              <img src={product.image} alt={product.name} />
-              <div className="hover-overlay" onClick={(e) => e.stopPropagation()}>
+      <h1 className="shop-title">Shop</h1>
+      {products.length === 0 ? (
+        <p className="empty">No products available.</p>
+      ) : (
+        <div className="product-grid">
+          {products.map((product) => (
+            <div key={product._id} className="product-card">
+              <div className="image-wrapper">
+                <Image
+                  src={product.image || "/placeholder.png"}
+                  alt={product.name}
+                  width={250}
+                  height={250}
+                  className="product-image"
+                />
+              </div>
+              <div className="product-info">
+                <h3>{product.name}</h3>
+                <p>${product.price.toFixed(2)}</p>
                 <button
                   className="add-btn"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleAddToCart(product);
-                  }}
+                  onClick={() => addToCart(product)}
                 >
-                  ADD TO CART
+                  {user ? "Add to Cart" : "Login to Add"}
                 </button>
-                <div className="hover-icons">
-                  <VisibilityIcon />
-                  <FavoriteBorderIcon />
-                </div>
               </div>
             </div>
-            <p className="product-tag">{product.category}</p>
-            <h3>{product.name}</h3>
-            <p className="product-price">${product.price?.toFixed(2)}</p>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

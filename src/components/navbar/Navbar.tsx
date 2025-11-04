@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import "./navbar.css";
 import WaterDropIcon from "@mui/icons-material/WaterDrop";
@@ -14,12 +15,14 @@ const Navbar = () => {
   const { cart } = useCart();
   const { isAuthenticated, isAdmin, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
+  const router = useRouter();
 
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   const handleLogout = () => {
     logout();
     setMenuOpen(false);
+    router.push("/"); // Redirect to homepage after logout
   };
 
   return (
@@ -30,53 +33,73 @@ const Navbar = () => {
       </div>
 
       <div className={`navbar-right ${menuOpen ? "active" : ""}`}>
-        <Link href="/" onClick={() => setMenuOpen(false)}>
-          HOMEPAGE
-        </Link>
-        <Link href="/shop" onClick={() => setMenuOpen(false)}>
-          SHOP
-        </Link>
-        <Link href="/blog" onClick={() => setMenuOpen(false)}>
-          BLOG
-        </Link>
-        <Link href="/contact" onClick={() => setMenuOpen(false)}>
-          CONTACT
-        </Link>
+        {/* Normal user links */}
+        {!isAdmin && (
+          <>
+            <Link href="/" onClick={() => setMenuOpen(false)}>
+              HOMEPAGE
+            </Link>
+            <Link href="/shop" onClick={() => setMenuOpen(false)}>
+              SHOP
+            </Link>
+            <Link href="/blog" onClick={() => setMenuOpen(false)}>
+              BLOG
+            </Link>
+            <Link href="/contact" onClick={() => setMenuOpen(false)}>
+              CONTACT
+            </Link>
 
-        {/* Show MY ACCOUNT only when NOT logged in */}
-        {!isAuthenticated && (
-          <Link href="/myaccount" onClick={() => setMenuOpen(false)}>
-            MY ACCOUNT
-          </Link>
+            {/* Show MY ACCOUNT only when NOT logged in */}
+            {!isAuthenticated && (
+              <Link href="/myaccount" onClick={() => setMenuOpen(false)}>
+                MY ACCOUNT
+              </Link>
+            )}
+
+            {/* Logged-in user options */}
+            {isAuthenticated && (
+              <>
+                <button className="logout-btn" onClick={handleLogout}>
+                  LOGOUT
+                </button>
+                <Link
+                  href="/cart"
+                  className="cart-icon"
+                  onClick={() => setMenuOpen(false)}
+                  aria-label="View Cart"
+                >
+                  <ShoppingCartIcon />
+                  {totalItems > 0 && (
+                    <span className="cart-count">{totalItems}</span>
+                  )}
+                </Link>
+              </>
+            )}
+          </>
         )}
 
-        {/* Show ADD PRODUCT only for Admin */}
+        {/* Admin-only links */}
         {isAuthenticated && isAdmin && (
-          <Link
-            href="/admin"
-            className="add-btn"
-            onClick={() => setMenuOpen(false)}
-          >
-            ADD PRODUCT
-          </Link>
+          <>
+            <Link
+              href="/admin/addproduct"
+              className="add-btn"
+              onClick={() => setMenuOpen(false)}
+            >
+              ADD PRODUCT
+            </Link>
+            <Link
+              href="/admin/addblog"
+              className="add-btn"
+              onClick={() => setMenuOpen(false)}
+            >
+              ADD BLOG
+            </Link>
+            <button className="logout-btn" onClick={handleLogout}>
+              LOGOUT
+            </button>
+          </>
         )}
-
-        {/* Logout button only for logged-in users */}
-        {isAuthenticated && (
-          <button className="logout-btn" onClick={handleLogout}>
-            LOGOUT
-          </button>
-        )}
-
-        <Link
-          href="/cart"
-          className="cart-icon"
-          onClick={() => setMenuOpen(false)}
-          aria-label="View Cart"
-        >
-          <ShoppingCartIcon />
-          {totalItems > 0 && <span className="cart-count">{totalItems}</span>}
-        </Link>
       </div>
 
       <div className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)}>
