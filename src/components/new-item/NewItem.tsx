@@ -32,7 +32,7 @@ const NewItems = () => {
   const handleAddToCart = async (item: any, e: React.MouseEvent) => {
     e.stopPropagation();
     if (!user || !token) {
-      router.push("/login");
+      router.push("/account");
       return;
     }
     await addToCart(item);

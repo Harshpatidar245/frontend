@@ -35,7 +35,7 @@ const TrendyItem = () => {
   const handleAddToCart = async (product: any, e: React.MouseEvent) => {
     e.stopPropagation();
     if (!user || !token) {
-      router.push("/login");
+      router.push("/account");
       return;
     }
     await addToCart(product);
