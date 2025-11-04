@@ -17,13 +17,7 @@
   font-size: 1rem;
 }
 
-.cart-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-/* Table */
+/* --- TABLE --- */
 .cart-table {
   width: 100%;
   border-collapse: collapse;
@@ -45,25 +39,25 @@
   font-weight: 600;
 }
 
-.cart-img {
-  width: 60px;
-  height: 60px;
-  object-fit: contain;
-  margin-left: 8px;
+.product-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
 }
 
 .remove-btn {
   background: transparent;
   border: none;
   color: #777;
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   cursor: pointer;
 }
 .remove-btn:hover {
   color: #b56cff;
 }
 
-/* Quantity controls */
+/* --- QUANTITY --- */
 .qty-control {
   display: flex;
   align-items: center;
@@ -73,31 +67,33 @@
 .qty-control button {
   background: #f0f0f0;
   border: none;
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   font-size: 1rem;
   cursor: pointer;
-  border-radius: 2px;
+  border-radius: 3px;
 }
 .qty-control span {
   min-width: 24px;
   text-align: center;
+  font-weight: 500;
 }
 
-/* Bottom sections */
+/* --- BOTTOM SECTIONS --- */
 .cart-bottom {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 30px;
+  margin-top: 20px;
 }
 
 .coupon-section {
   flex: 1;
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 10px;
-  height: 0.5rem;
 }
 
 .coupon-section input {
@@ -105,7 +101,7 @@
   min-width: 160px;
   padding: 10px;
   border: 1px solid #ccc;
-  border-radius: 2px;
+  border-radius: 3px;
 }
 
 .coupon-section button {
@@ -128,6 +124,7 @@
   border: 1px solid #ddd;
   background: #fff;
   padding: 20px;
+  border-radius: 4px;
 }
 
 .summary-section h3 {
@@ -164,7 +161,7 @@
   background: #9c4fe0;
 }
 
-/* Responsive */
+/* --- RESPONSIVE --- */
 @media (max-width: 768px) {
   .cart-table th,
   .cart-table td {
@@ -173,9 +170,61 @@
 
   .coupon-section {
     flex-direction: column;
+    align-items: stretch;
+  }
+
+  .coupon-section input,
+  .coupon-section button {
+    width: 100%;
   }
 
   .summary-section {
     flex: 1;
+  }
+}
+
+@media (max-width: 500px) {
+  .product-cell {
+    flex-direction: column;
+  }
+
+  .cart-bottom {
+    flex-direction: column;
+  }
+
+  .summary-section {
+    width: 100%;
+  }
+}
+
+@media (max-width: 350px) {
+  .cart-page {
+    padding: 0 10px;
+  }
+
+  .cart-table th,
+  .cart-table td {
+    padding: 8px 5px;
+    font-size: 0.75rem;
+  }
+
+  .qty-control button {
+    width: 22px;
+    height: 22px;
+    font-size: 0.8rem;
+  }
+
+  .coupon-section input {
+    padding: 8px;
+  }
+
+  .coupon-section button {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
+
+  .checkout {
+    padding: 10px;
+    font-size: 0.9rem;
   }
 }

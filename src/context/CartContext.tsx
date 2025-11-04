@@ -1,6 +1,14 @@
 "use client";
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 import { api } from "@/lib/api";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 export type Product = {
   _id?: string;
@@ -27,60 +35,94 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
+  const { token, user } = useAuth();
+  const router = useRouter();
 
-  // load user cart
+  // Load user cart only if logged in
   useEffect(() => {
     const fetchCart = async () => {
+      if (!token) return; // skip if not logged in
       try {
         const res = await api.get("/cart");
         if (res.data?.items) setCart(res.data.items);
-      } catch (err) {
-        console.error("Failed to load cart:", err);
+      } catch (err: any) {
+        // Silently ignore 401s, log others
+        if (err.response?.status !== 401)
+          console.error("Failed to load cart:", err);
       }
     };
     fetchCart();
-  }, []);
+  }, [token]);
 
-  // add to cart
+  // Add to cart
   const addToCart = async (product: Product) => {
+    if (!user || !token) {
+      router.push("/login");
+      return;
+    }
+
     const productId = product._id;
     if (!productId) return;
+
     try {
       const res = await api.post("/cart/add", { productId, quantity: 1 });
       if (res.data?.items) setCart(res.data.items);
-    } catch (err) {
-      console.error("Failed to add item:", err);
+    } catch (err: any) {
+      if (err.response?.status === 401) {
+        router.push("/login");
+      } else {
+        console.error("Failed to add item:", err);
+      }
     }
   };
 
-  // remove from cart
+  // Remove from cart
   const removeFromCart = async (id: string) => {
+    if (!token) {
+      router.push("/login");
+      return;
+    }
     try {
       const res = await api.delete(`/cart/remove/${id}`);
       if (res.data?.items) setCart(res.data.items);
-    } catch (err) {
-      console.error("Failed to remove item:", err);
+    } catch (err: any) {
+      if (err.response?.status === 401) {
+        router.push("/login");
+      } else {
+        console.error("Failed to remove item:", err);
+      }
     }
   };
 
-  // update quantity
+  // Update quantity
   const updateQuantity = async (id: string, qty: number) => {
+    if (!token) {
+      router.push("/login");
+      return;
+    }
     if (qty < 1) return;
     try {
       const res = await api.put(`/cart/update/${id}`, { quantity: qty });
       if (res.data?.items) setCart(res.data.items);
-    } catch (err) {
-      console.error("Failed to update quantity:", err);
+    } catch (err: any) {
+      if (err.response?.status === 401) {
+        router.push("/login");
+      } else {
+        console.error("Failed to update quantity:", err);
+      }
     }
   };
 
+  // Calculate total
   const total = cart.reduce((sum, item) => {
     const price = item.productId?.price ?? 0;
     return sum + price * item.quantity;
   }, 0);
 
   return (
-    <CartContext.Provider value={{ cart, setCart, addToCart, removeFromCart, updateQuantity, total }}>
+    <CartContext.Provider
+      value={{ cart, setCart, addToCart, removeFromCart, updateQuantity, total }}
+    >
       {children}
     </CartContext.Provider>
   );

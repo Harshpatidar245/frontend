@@ -1,26 +1,41 @@
 "use client";
 import "./Account.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Account() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const [form, setForm] = useState({ name: "", email: "", password: "" });
-  const { login, register, isAuthenticated } = useAuth();
+  const { login, register, isAuthenticated, user } = useAuth(); // make sure `user` is returned from your AuthContext
   const [message, setMessage] = useState("");
+  const router = useRouter();
+
+  // redirect after login based on role
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      if (user.role === "admin") {
+        router.push("/admin");
+      } else {
+        router.push("/");
+      }
+    }
+  }, [isAuthenticated, user, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage("");
+
     if (isLogin) {
       const res = await login(form.email, form.password);
-      if (!res.ok) setMessage(res.message || "Login failed");
+      if (!res.ok) return setMessage(res.message || "Login failed");
+      // redirection handled automatically by useEffect
     } else {
       const res = await register(form);
-      if (!res.ok) setMessage(res.message || "Signup failed");
+      if (!res.ok) return setMessage(res.message || "Signup failed");
     }
   };
 

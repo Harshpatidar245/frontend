@@ -1,42 +1,62 @@
 .product-details {
-  max-width: 1100px;
+  max-width: 1150px;
   margin: 40px auto;
-  padding: 20px;
+  padding: 0 20px;
   font-family: "Poppins", sans-serif;
+  color: #222;
+}
+
+.page-title {
+  text-align: center;
+  font-size: 26px;
+  font-weight: 600;
+  margin-bottom: 40px;
 }
 
 .product-main {
   display: flex;
   flex-wrap: wrap;
-  gap: 40px;
+  gap: 50px;
+  justify-content: center;
+  align-items: flex-start;
 }
 
+/* --- IMAGE SECTION --- */
 .product-image-section {
   flex: 1;
   min-width: 300px;
+  text-align: center;
 }
 
 .main-image {
   width: 100%;
   max-width: 350px;
   border-radius: 10px;
+  border: 1px solid #eee;
 }
 
 .thumbnail-row {
   display: flex;
+  justify-content: center;
   gap: 10px;
-  margin-top: 10px;
+  margin-top: 15px;
 }
 
 .thumb {
-  width: 60px;
-  height: 60px;
-  border-radius: 6px;
+  width: 70px;
+  height: 70px;
+  border-radius: 8px;
   object-fit: cover;
   cursor: pointer;
-  border: 1px solid #eee;
+  border: 1px solid #ddd;
+  transition: 0.3s;
 }
 
+.thumb:hover {
+  border-color: #a475f2;
+}
+
+/* --- INFO SECTION --- */
 .product-info-section {
   flex: 1;
   min-width: 300px;
@@ -49,46 +69,72 @@
 }
 
 .product-price {
-  color: #27ae60;
+  color: #24a36d;
   font-size: 22px;
-  font-weight: 500;
-  margin-bottom: 10px;
+  font-weight: 600;
+  margin-bottom: 15px;
 }
 
 .product-short-desc {
   color: #555;
-  font-size: 14px;
-  margin-bottom: 20px;
+  line-height: 1.6;
+  font-size: 15px;
+  margin-bottom: 25px;
 }
 
+/* --- QUANTITY & ADD TO CART --- */
 .quantity-row {
   display: flex;
   align-items: center;
   gap: 10px;
   margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.qty-btn {
+  background: #f1f1f1;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.qty-btn:hover {
+  background: #ddd;
 }
 
 .quantity-input {
-  width: 60px;
+  width: 50px;
   height: 35px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 4px;
   text-align: center;
 }
 
 .add-btn {
-  background-color: #a475f2;
+  background: #a475f2;
   color: white;
   border: none;
-  border-radius: 5px;
-  padding: 10px 16px;
+  border-radius: 4px;
+  padding: 10px 18px;
   cursor: pointer;
-  font-weight: 500;
+  font-weight: 600;
   transition: 0.3s;
 }
 
 .add-btn:hover {
-  background-color: #8c5adf;
+  background: #8b5ee0;
+}
+
+.wishlist {
+  color: #555;
+  font-size: 14px;
+  margin-bottom: 15px;
+  cursor: pointer;
 }
 
 .category {
@@ -96,9 +142,10 @@
   font-size: 14px;
 }
 
+/* --- DESCRIPTION SECTION --- */
 .product-description-section {
   margin-top: 50px;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid #eee;
   padding-top: 20px;
 }
 
@@ -108,24 +155,86 @@
   margin-bottom: 10px;
 }
 
-.related-section {
-  margin-top: 60px;
+.product-description-section p {
+  color: #555;
+  line-height: 1.7;
 }
 
-.related-section h3 {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 20px;
+/* --- RESPONSIVE --- */
+@media (max-width: 900px) {
+  .product-main {
+    gap: 30px;
+  }
 }
 
-.related-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 20px;
+@media (max-width: 600px) {
+  .product-main {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .product-info-section {
+    width: 100%;
+  }
+
+  .quantity-row {
+    justify-content: center;
+  }
 }
 
-.loading {
-  text-align: center;
-  margin-top: 100px;
-  font-size: 18px;
+@media (max-width: 400px) {
+  .page-title {
+    font-size: 22px;
+  }
+
+  .product-title {
+    font-size: 20px;
+  }
+
+  .product-price {
+    font-size: 18px;
+  }
+
+  .quantity-input {
+    width: 45px;
+  }
+
+  .add-btn {
+    padding: 8px 14px;
+    font-size: 0.9rem;
+  }
+
+  .thumb {
+    width: 55px;
+    height: 55px;
+  }
+}
+
+@media (max-width: 350px) {
+  .product-details {
+    padding: 0 10px;
+  }
+
+  .main-image {
+    max-width: 280px;
+  }
+
+  .add-btn {
+    width: 100%;
+  }
+
+  .quantity-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .qty-btn,
+  .quantity-input {
+    height: 32px;
+  }
+
+  .product-description-section p {
+    font-size: 14px;
+  }
 }

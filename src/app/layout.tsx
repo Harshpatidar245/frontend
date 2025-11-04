@@ -4,6 +4,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { CartProvider } from "@/context/CartContext";
 import Navbar from "@/components/navbar/Navbar";
 import "./globals.css";
+import Footer from "@/components/footer/Footer";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -13,6 +14,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <CartProvider>
             <Navbar />
             {children}
+            <Footer />
           </CartProvider>
         </AuthProvider>
       </body>

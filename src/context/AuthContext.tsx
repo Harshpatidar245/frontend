@@ -28,6 +28,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Load token and user from localStorage on mount
   useEffect(() => {
     if (typeof window === "undefined") return;
     const t = localStorage.getItem("token");
@@ -47,10 +48,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const res = await api.post("/auth/login", { email, password });
       const { token: t, user: u } = res.data;
+
+      // Save and set user/token
       setToken(t);
       setUser(u);
       localStorage.setItem("token", t);
       localStorage.setItem("user", JSON.stringify(u));
+
+      // Explicitly check for admin login
+      if (u?.role === "admin") {
+        console.log("Admin logged in:", u.email);
+      }
+
       return { ok: true };
     } catch (err: any) {
       return { ok: false, message: err?.response?.data?.message || "Login failed" };
@@ -61,10 +70,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const res = await api.post("/auth/register", payload);
       const { token: t, user: u } = res.data;
+
       setToken(t);
       setUser(u);
       localStorage.setItem("token", t);
       localStorage.setItem("user", JSON.stringify(u));
+
       return { ok: true };
     } catch (err: any) {
       return { ok: false, message: err?.response?.data?.message || "Signup failed" };
