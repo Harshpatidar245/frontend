@@ -14,7 +14,6 @@
 .divider {
   margin-bottom: 40px;
 }
-
 .divider span {
   display: inline-block;
   width: 6px;
@@ -33,12 +32,13 @@
 
 .blog-card {
   background: #fff;
-  border-radius: 6px;
+  border-radius: 8px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: all 0.3s ease;
   width: 300px;
   text-align: left;
+  cursor: pointer;
 }
 
 .blog-card:hover {
@@ -50,19 +50,21 @@
   width: 100%;
   height: 200px;
   object-fit: cover;
+  transition: transform 0.3s ease;
+}
+.blog-card:hover .blog-image img {
+  transform: scale(1.03);
 }
 
 .blog-content {
   padding: 20px;
 }
-
 .blog-content h3 {
   font-size: 1rem;
   color: #222;
   margin-bottom: 10px;
   font-weight: 600;
 }
-
 .blog-content p {
   font-size: 0.9rem;
   color: #555;
@@ -75,13 +77,12 @@
   color: #fff;
   border: none;
   padding: 8px 18px;
-  border-radius: 3px;
-  font-size: 0.8rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
   cursor: pointer;
   font-weight: 600;
-  transition: all 0.3s;
+  transition: background 0.3s;
 }
-
 .learn-btn:hover {
   background: #9b44f9;
 }
@@ -89,7 +90,6 @@
 .pagination-dots {
   margin-top: 30px;
 }
-
 .pagination-dots span {
   display: inline-block;
   width: 8px;
@@ -98,34 +98,75 @@
   border-radius: 50%;
   background: #ccc;
 }
-
 .pagination-dots .active {
   background: #b56cff;
 }
 
-/* Responsive Layout */
+/* RESPONSIVE DESIGN */
+
+/* Tablets */
 @media (max-width: 1024px) {
   .blog-container {
     gap: 20px;
   }
 }
 
+/* Small tablets / big phones */
 @media (max-width: 768px) {
+  .news-blog {
+    padding: 50px 5%;
+  }
   .blog-card {
     width: 90%;
   }
 }
 
+/* Phones */
 @media (max-width: 480px) {
   .title {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
   }
-
   .blog-card {
     width: 100%;
   }
-
   .blog-content h3 {
     font-size: 0.95rem;
+  }
+  .blog-content p {
+    font-size: 0.85rem;
+  }
+  .learn-btn {
+    padding: 7px 14px;
+    font-size: 0.8rem;
+  }
+}
+
+/* Ultra-small screens (350px and below) */
+@media (max-width: 380px) {
+  .news-blog {
+    padding: 40px 4%;
+  }
+  .title {
+    font-size: 1.25rem;
+  }
+  .blog-card {
+    width: 100%;
+    border-radius: 6px;
+  }
+  .blog-image img {
+    height: 160px;
+  }
+  .blog-content {
+    padding: 14px;
+  }
+  .blog-content h3 {
+    font-size: 0.9rem;
+  }
+  .blog-content p {
+    font-size: 0.8rem;
+  }
+  .learn-btn {
+    padding: 6px 12px;
+    font-size: 0.75rem;
   }
 }

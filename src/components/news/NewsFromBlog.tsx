@@ -1,31 +1,34 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./NewsFromBlog.css";
 import { useRouter } from "next/navigation";
+import { api } from "@/lib/api"; // assuming you already have axios instance here
 
-const blogPosts = [
-  {
-    id: 1,
-    title: "Duis Sagittis Ipsum Praesent",
-    desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus.",
-    img: "https://essential.oceanwp.org/wp-content/uploads/2017/02/Sans-titre-1_0005_shutterstock_1915964188-600x417.png",
-  },
-  {
-    id: 2,
-    title: "Tortor Neque Adipiscing Diam",
-    desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus.",
-    img: "https://essential.oceanwp.org/wp-content/uploads/2017/02/Sans-titre-1_0002_shutterstock_1932934118-300x208.png",
-  },
-  {
-    id: 3,
-    title: "Vestibulum Sapin Prin Quam",
-    desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus.",
-    img: "https://essential.oceanwp.org/wp-content/uploads/2017/02/Sans-titre-1_0007_shutterstock_1857772774-300x208.png",
-  },
-];
+type Blog = {
+  _id: string;
+  title: string;
+  description: string;
+  image: string;
+};
 
 const NewsFromBlog = () => {
   const router = useRouter();
+  const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const res = await api.get("/blogs"); // backend route: /api/blogs
+        setBlogs(res.data);
+      } catch (err) {
+        console.error("Error fetching blogs:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchBlogs();
+  }, []);
 
   return (
     <section className="news-blog">
@@ -38,24 +41,28 @@ const NewsFromBlog = () => {
           ))}
       </div>
 
-      <div className="blog-container">
-        {blogPosts.map((post) => (
-          <div
-            key={post.id}
-            className="blog-card"
-            onClick={() => router.push(`/blog/${post.id}`)}
-          >
-            <div className="blog-image">
-              <img src={post.img} alt={post.title} />
+      {loading ? (
+        <p>Loading blogs...</p>
+      ) : (
+        <div className="blog-container">
+          {blogs.map((post) => (
+            <div
+              key={post._id}
+              className="blog-card"
+              onClick={() => router.push(`/blog/${post._id}`)}
+            >
+              <div className="blog-image">
+                <img src={post.image} alt={post.title} />
+              </div>
+              <div className="blog-content">
+                <h3>{post.title}</h3>
+                <p>{post.description?.slice(0, 100)}...</p>
+                <button className="learn-btn">LEARN MORE</button>
+              </div>
             </div>
-            <div className="blog-content">
-              <h3>{post.title}</h3>
-              <p>{post.desc}</p>
-              <button className="learn-btn">LEARN MORE</button>
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       <div className="pagination-dots">
         <span className="active"></span>

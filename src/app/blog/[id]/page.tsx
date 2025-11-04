@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import "./blogDetail.css";
 import Link from "next/link";
+import "./blogDetail.css";
 import { api } from "@/lib/api";
 
 export default function BlogDetailPage() {
@@ -19,7 +19,6 @@ export default function BlogDetailPage() {
         const res = await api.get(`/blogs/${blogId}`);
         setBlog(res.data);
 
-        // Fetch related posts
         const all = await api.get("/blogs");
         setRelated(all.data.filter((b: any) => b._id !== blogId).slice(0, 3));
       } catch (err) {
@@ -42,25 +41,31 @@ export default function BlogDetailPage() {
 
   return (
     <main className="blog-container">
-      <div className="blog-top">
-        <h1 className="site-title">Blog</h1>
+      <div className="breadcrumb-bar">
+        <h2 className="page-title">Blog</h2>
         <div className="breadcrumb">
-          <Link href="/">Home</Link> <span>›</span> <Link href="/blog">Blog</Link>
+          <Link href="/">Home</Link> <span>›</span>{" "}
+          <Link href="/blog">Tips</Link> <span>›</span>{" "}
+          <span>{blog.title}</span>
         </div>
       </div>
 
-      <article className="blog-article">
+      <article className="blog-detail">
         <img className="hero-image" src={blog.image} alt={blog.title} />
-        <h2 className="post-title">{blog.title}</h2>
+        <h1 className="post-title">{blog.title}</h1>
 
         <div className="post-meta">
-          <span className="meta-item">✍️ {blog.author}</span>
-          <span className="meta-item">•</span>
-          <span className="meta-item">
-            📅 {new Date(blog.createdAt).toLocaleDateString()}
+          <span>✍️ {blog.author || "OceanWP"}</span>
+          <span>•</span>
+          <span>
+            📅 {new Date(blog.createdAt).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
           </span>
-          <span className="meta-item">•</span>
-          <span className="meta-item">💬 0 Comments</span>
+          <span>•</span>
+          <span>💬 0 Comments</span>
         </div>
 
         <div
@@ -68,25 +73,14 @@ export default function BlogDetailPage() {
           dangerouslySetInnerHTML={{ __html: blog.content }}
         />
 
-        <div className="share-row">
-          <h4>PLEASE SHARE THIS</h4>
-          <div className="share-buttons">
-            <button className="share-btn">X</button>
-            <button className="share-btn">Facebook</button>
-            <button className="share-btn">Pinterest</button>
-            <button className="share-btn">LinkedIn</button>
-          </div>
-        </div>
-
         <div className="related-section">
-          <h4>YOU MIGHT ALSO LIKE</h4>
+          <h3>You Might Also Like</h3>
           <div className="related-grid">
             {related.map((r) => (
               <div
                 key={r._id}
                 className="related-card"
                 onClick={() => router.push(`/blog/${r._id}`)}
-                role="button"
               >
                 <img src={r.image} alt={r.title} />
                 <h5>{r.title}</h5>
