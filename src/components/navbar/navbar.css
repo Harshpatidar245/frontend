@@ -8,170 +8,174 @@
   justify-content: space-between;
   align-items: center;
   padding: 14px 80px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
 }
 
+/* Left section (logo) */
 .navbar-left {
   display: flex;
   align-items: center;
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: #222;
+  gap: 8px;
+  font-weight: bold;
+  font-size: 20px;
+  color: #333;
 }
 
-.navbar-left svg {
-  color: #b56cff;
-  font-size: 2rem;
-  margin-right: 8px;
+.logo-icon {
+  color: #0077ff;
 }
 
 .navbar-right {
   display: flex;
   align-items: center;
-  gap: 32px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  transition: all 0.3s ease;
+  gap: 30px;
 }
 
 .navbar-right a {
-  color: #000;
   text-decoration: none;
-  transition: color 0.25s ease;
+  color: #333;
+  font-weight: 500;
+  transition: color 0.2s ease;
 }
 
 .navbar-right a:hover {
-  color: #b56cff;
+  color: #0077ff;
 }
 
+/* Add Product button (Admin only) */
+.add-btn {
+  background-color: #0077ff;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.add-btn:hover {
+  background-color: #005fd1;
+}
+
+/* Logout button */
+.logout-btn {
+  background-color: transparent;
+  border: 1px solid #0077ff;
+  color: #0077ff;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.logout-btn:hover {
+  background-color: #0077ff;
+  color: #fff;
+}
+
+/* Cart icon */
 .cart-icon {
   position: relative;
-}
-
-.cart-icon svg {
-  font-size: 1.7rem;
-  color: #000;
+  display: flex;
+  align-items: center;
+  color: #333;
 }
 
 .cart-count {
   position: absolute;
-  top: -6px;
-  right: -8px;
-  background: #000;
-  color: #fff;
-  font-size: 0.7rem;
-  width: 14px;
-  height: 14px;
+  top: -5px;
+  right: -10px;
+  background-color: red;
+  color: white;
   border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  font-size: 10px;
+  padding: 2px 5px;
 }
 
+/* Mobile menu toggle */
 .menu-toggle {
   display: none;
+  font-size: 28px;
+  color: #333;
   cursor: pointer;
 }
 
-.menu-toggle svg {
-  font-size: 2rem;
-  color: #000;
-}
-
-/* Tablet View */
-@media (max-width: 768px) {
+/* Responsive Design */
+@media (max-width: 1024px) {
   .navbar {
-    padding: 12px 30px;
+    padding: 14px 40px;
   }
 
   .navbar-right {
-    gap: 18px;
-    font-size: 0.9rem;
-  }
-
-  .navbar-left {
-    font-size: 1.2rem;
+    gap: 20px;
   }
 }
 
-/* Mobile View (<=500px) */
-@media (max-width: 500px) {
+@media (max-width: 768px) {
   .navbar {
-    padding: 12px 20px;
-  }
-
-  .menu-toggle {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    padding: 12px 25px;
   }
 
   .navbar-right {
     position: absolute;
-    top: 60px;
+    top: 65px;
     right: 0;
-    background-color: #fff;
+    background-color: white;
+    width: 100%;
     flex-direction: column;
     align-items: flex-start;
-    width: 100%;
+    gap: 15px;
     padding: 20px;
-    gap: 20px;
-    border-top: 1px solid #eee;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-    transform: translateY(-200%);
-    opacity: 0;
-    pointer-events: none;
-    transition: all 0.3s ease;
+    display: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   }
 
   .navbar-right.active {
-    transform: translateY(0);
-    opacity: 1;
-    pointer-events: all;
-  }
-
-  .navbar-right a {
-    width: 100%;
-    font-size: 1rem;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #f2f2f2;
-  }
-
-  .navbar-left {
-    font-size: 1rem;
-  }
-
-  /* Make cart icon visible beside hamburger in mobile */
-  .menu-toggle .cart-icon {
     display: flex;
-    position: relative;
   }
 
-  /* Hide cart from the main menu when menu toggle is visible */
-  .navbar-right .cart-icon {
-    display: none;
+  .navbar-right a,
+  .add-btn,
+  .logout-btn {
+    width: 100%;
+    text-align: left;
+  }
+
+  .menu-toggle {
+    display: block;
   }
 }
 
-/* Restore desktop layout if resized back up */
-@media (min-width: 501px) {
+/* Super small devices (like 350px) */
+@media (max-width: 400px) {
+  .navbar {
+    padding: 10px 16px;
+  }
+
+  .navbar-left {
+    font-size: 16px;
+  }
+
+  .menu-toggle {
+    font-size: 24px;
+  }
+
   .navbar-right {
-    position: static;
-    flex-direction: row;
-    align-items: center;
-    opacity: 1;
-    pointer-events: all;
-    transform: none;
-    background: none;
-    box-shadow: none;
-    padding: 0;
+    top: 60px;
+    padding: 16px;
+    gap: 12px;
   }
 
-  .navbar-right .cart-icon {
-    display: flex;
+  .navbar-right a,
+  .add-btn,
+  .logout-btn {
+    font-size: 14px;
+    padding: 8px 10px;
   }
 
-  .menu-toggle .cart-icon {
-    display: none;
+  .cart-icon {
+    font-size: 22px;
   }
 }
